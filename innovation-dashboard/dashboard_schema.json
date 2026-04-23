@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CAITE Innovation Cockpit — Dashboard Schema",
+  "description": "C-Level Innovation Dashboard data schema for transformation ROI tracking, pipeline health, and agent swarm monitoring.",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "description": "Dashboard metadata.",
+      "properties": {
+        "organisation": { "type": "string" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "reporting_period": {
+          "type": "object",
+          "properties": {
+            "start": { "type": "string", "format": "date" },
+            "end": { "type": "string", "format": "date" }
+          },
+          "required": ["start", "end"]
+        },
+        "sovereignty_label": { "type": "string", "default": "eu-sovereign" }
+      },
+      "required": ["organisation", "generated_at", "reporting_period"]
+    },
+    "transformation_roi": {
+      "type": "object",
+      "description": "Financial transformation KPIs.",
+      "properties": {
+        "total_investment_eur": { "type": "number", "minimum": 0 },
+        "realised_savings_eur": { "type": "number", "minimum": 0 },
+        "new_revenue_eur": { "type": "number", "minimum": 0 },
+        "roi_percentage": { "type": "number" },
+        "payback_months": { "type": "number", "minimum": 0 },
+        "value_drivers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "driver": { "type": "string" },
+              "impact_eur": { "type": "number" },
+              "change_percentage": { "type": "number" },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+            },
+            "required": ["driver", "impact_eur"]
+          }
+        }
+      },
+      "required": ["total_investment_eur", "roi_percentage"]
+    },
+    "pipeline_health": {
+      "type": "object",
+      "description": "End-to-end CAITE pipeline status.",
+      "properties": {
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "phase": { "type": "integer", "minimum": 1, "maximum": 4 },
+              "name": { "type": "string" },
+              "status": { "type": "string", "enum": ["healthy", "degraded", "critical", "offline"] },
+              "uptime_percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+              "avg_latency_ms": { "type": "number", "minimum": 0 },
+              "error_rate_percentage": { "type": "number", "minimum": 0 }
+            },
+            "required": ["phase", "name", "status"]
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "overall_status": { "type": "string", "enum": ["healthy", "degraded", "critical"] }
+      },
+      "required": ["phases", "overall_status"]
+    },
+    "agent_swarm": {
+      "type": "object",
+      "description": "Agent swarm performance metrics.",
+      "properties": {
+        "total_agents": { "type": "integer", "minimum": 0 },
+        "agents_available": { "type": "integer", "minimum": 0 },
+        "agents_degraded": { "type": "integer", "minimum": 0 },
+        "tasks_completed_period": { "type": "integer", "minimum": 0 },
+        "avg_task_latency_ms": { "type": "number", "minimum": 0 },
+        "success_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "agents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "agent_id": { "type": "string" },
+              "name": { "type": "string" },
+              "status": { "type": "string" },
+              "tasks_completed": { "type": "integer" },
+              "success_rate": { "type": "number" },
+              "avg_latency_ms": { "type": "number" }
+            },
+            "required": ["agent_id", "name", "status"]
+          }
+        }
+      },
+      "required": ["total_agents", "success_rate"]
+    },
+    "compliance_score": {
+      "type": "object",
+      "description": "Aggregated compliance and sovereignty posture.",
+      "properties": {
+        "overall_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "gdpr_compliant": { "type": "boolean" },
+        "ai_act_risk_tier": { "type": "string", "enum": ["minimal", "limited", "high", "unacceptable"] },
+        "last_audit_date": { "type": "string", "format": "date" },
+        "open_findings": { "type": "integer", "minimum": 0 },
+        "data_residency_verified": { "type": "boolean" }
+      },
+      "required": ["overall_score", "gdpr_compliant"]
+    },
+    "innovation_velocity": {
+      "type": "object",
+      "description": "Rate of capability expansion and innovation.",
+      "properties": {
+        "new_capabilities_period": { "type": "integer", "minimum": 0 },
+        "content_types_supported": { "type": "integer", "minimum": 0 },
+        "integrations_active": { "type": "integer", "minimum": 0 },
+        "assets_processed_total": { "type": "integer", "minimum": 0 },
+        "semantic_graph_nodes": { "type": "integer", "minimum": 0 },
+        "graph_growth_rate": { "type": "number" }
+      }
+    }
+  },
+  "required": ["meta", "transformation_roi", "pipeline_health", "agent_swarm", "compliance_score"]
+}
