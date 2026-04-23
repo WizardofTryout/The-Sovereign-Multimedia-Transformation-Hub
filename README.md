@@ -154,6 +154,31 @@ This setup makes it possible to process highly sensitive (e.g., hospital records
 
 ---
 
+## 🚀 Quickstart: Try It Locally
+
+Want to see Sovereign AI in action on your own machine? It takes exactly three commands. No cloud accounts, no API keys, no data leaving your laptop.
+
+**Prerequisites**: [Docker](https://docs.docker.com/get-docker/) installed.
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/WizardofTryout/The-Sovereign-Multimedia-Transformation-Hub.git
+cd The-Sovereign-Multimedia-Transformation-Hub
+
+# 2. Boot the 100% air-gapped system (Vault, Local STT/TTS, Orchestrator)
+docker-compose up -d
+
+# 3. Watch the orchestrator negotiate and securely mask PII
+docker logs -f caite-orchestrator
+```
+
+**Feel invited to experiment:**
+- Open `src/orchestrator.py` and tweak the agent logic.
+- Provide a new audio sample or creative brief and watch the localized cognitive services react.
+- Contribute your own skills: build a new Sovereign MCP Tool in `mcp_media_tools.py`! Pull requests are warmly welcomed.
+
+---
+
 ## Development & Architecture
 
 CAITE is developed and maintained by **Oszillation AI Ecosystems**.
