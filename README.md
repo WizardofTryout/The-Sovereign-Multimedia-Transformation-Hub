@@ -144,6 +144,14 @@ CAITE is built on a single non-negotiable principle: **your data, your models, y
 - **On-premise & sovereign cloud deployment** — no dependency on US hyperscaler data residency
 - **Explainable Agent Decisions** — every creative and technical output is traceable to a decision graph
 
+### 100% Air-Gapped Execution via Docker Compose
+CAITE natively supports a completely offline, air-gapped deployment architecture designed to prevent data leakage at the Linux kernel level:
+- **`internal: true` Networking:** The internal bridge network completely severs outbound internet access, mathematically guaranteeing that proprietary IP or PII cannot be exfiltrated.
+- **Local Cognitive Services:** Utilizing tools like Wyoming Whisper or Piper directly within the Docker Swarm to replace SaaS APIs like OpenAI or ElevenLabs.
+- **HashiCorp Vault Integrations:** API keys and environment variables are securely injected dynamically via an isolated Vault container running in `IPC_LOCK` memory space.
+
+This setup makes it possible to process highly sensitive (e.g., hospital records, pre-release Netflix scripts) data on local metal with the full capability of an Agentic Orchestrator.
+
 ---
 
 ## Development & Architecture
