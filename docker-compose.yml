@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # ─────────────────────────────────────────────────────────────
+  # LangGraph Orchestrator (CAITE Core)
+  # ─────────────────────────────────────────────────────────────
+  orchestrator:
+    image: python:3.11-slim
+    container_name: caite-orchestrator
+    working_dir: /app
+    volumes:
+      - .:/app
+    # Install dependencies and run the orchestrator
+    command: >
+      bash -c "pip install -r requirements.txt && python src/orchestrator.py"
+    environment:
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=${VAULT_TOKEN:-root-airgap-token}
+      - LOCAL_AUDIO_STT_URL=http://local-audio-gateway:10300
+      - LOCAL_AUDIO_TTS_URL=http://local-audio-gateway:10200
+      - AIR_GAPPED_MODE=true
+    depends_on:
+      - vault
+      - local-audio-gateway
+    networks:
+      - caite-airgap-net
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────
+  # Local Audio Processing (STT / TTS Mock / Wyoming Protocol)
+  # ─────────────────────────────────────────────────────────────
+  local-audio-gateway:
+    # Example using Wyoming Whisper for local Speech-to-Text
+    image: rhasspy/wyoming-whisper:latest
+    container_name: caite-audio-gateway
+    command: ["--model", "tiny", "--language", "en"]
+    expose:
+      - "10300"
+      - "10200"
+    volumes:
+      - audio-model-cache:/data
+    networks:
+      - caite-airgap-net
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────
+  # HashiCorp Vault (Secure Key & Secret Management)
+  # ─────────────────────────────────────────────────────────────
+  vault:
+    image: hashicorp/vault:latest
+    container_name: caite-vault
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN:-root-airgap-token}
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+    expose:
+      - "8200"
+    cap_add:
+      - IPC_LOCK
+    networks:
+      - caite-airgap-net
+    restart: unless-stopped
+
+# ─────────────────────────────────────────────────────────────
+# Air-gapped Network Configuration
+# ─────────────────────────────────────────────────────────────
+networks:
+  caite-airgap-net:
+    driver: bridge
+    # 'internal: true' ensures true air-gapped mode.
+    # Containers on this network cannot reach the external internet.
+    internal: true 
+
+volumes:
+  audio-model-cache:
