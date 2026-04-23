@@ -148,7 +148,7 @@ CAITE is built on a single non-negotiable principle: **your data, your models, y
 
 ## Development & Architecture
 
-CAITE is developed and maintained by **Oszillation AI Ecosystems**. Our 10-person AI Architecture Seal Team specializes in agentic system design, safety, and enterprise deployment.
+CAITE is developed and maintained by **Oszillation AI Ecosystems**.
 
 **Matthias Köhler** · Managing Director & Principal AI Architect  
 GitHub: [@WizardofTryout](https://github.com/WizardofTryout)  
