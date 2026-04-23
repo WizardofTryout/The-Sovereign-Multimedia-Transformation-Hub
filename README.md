@@ -84,6 +84,7 @@ flowchart LR
 ```
 
 ---
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WizardofTryout/The-Sovereign-Multimedia-Transformation-Hub)
 
 ## Repository Architecture
 
